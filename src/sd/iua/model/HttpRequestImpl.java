@@ -21,12 +21,14 @@ public class HttpRequestImpl implements HttpRequest {
         String line;
         try {
             while( (line = in.readLine()) != null){
+                if(this.line == null) this.line = line;
                 sb.append(line+"\r\n");
+                if(line.equals("")) break;
             }
         } catch (IOException e) {
             sb = null;
         }
-        this.line = sb.toString().substring(0,sb.toString().indexOf("\r"));
+        //this.line = sb.toString().substring(0,sb.toString().indexOf("\r"));
     }
 
     @Override
