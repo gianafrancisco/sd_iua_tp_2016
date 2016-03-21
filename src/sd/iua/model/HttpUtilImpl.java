@@ -1,9 +1,10 @@
 package sd.iua.model;
 
 import sd.iua.model.HttpUtil;
+import sun.misc.IOUtils;
+import sun.nio.ch.IOUtil;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 
 /**
  * Created by francisco on 21/03/2016.
@@ -18,12 +19,16 @@ public class HttpUtilImpl implements HttpUtil {
 
     @Override
     public byte[] readFile(String virtualPath) throws IOException {
-        return new byte[0];
+        File f = new File(folder, virtualPath);
+        FileInputStream fis = new FileInputStream(f);
+        byte bytes[] = new byte[(int)f.length()];
+        fis.read(bytes,0,bytes.length);
+        fis.close();
+        return bytes;
     }
 
     @Override
     public boolean fileExists(String virtualPath) {
-        //File f = new File(folder.getAbsoluteFile() + File.separator + virtualPath);
         File f = new File(folder, virtualPath);
         return f.exists();
     }

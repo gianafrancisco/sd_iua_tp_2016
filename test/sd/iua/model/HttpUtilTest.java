@@ -29,4 +29,10 @@ public class HttpUtilTest {
     public void file_exists() throws Exception {
         Assert.assertThat(httpUtil.fileExists("test/sd/iua/model/index.html"), is(true));
     }
+
+    @Test
+    public void read_file_content() throws Exception {
+        byte content[] = httpUtil.readFile("test/sd/iua/model/index.html");
+        Assert.assertThat(content, is("abcdefg".getBytes()));
+    }
 }
