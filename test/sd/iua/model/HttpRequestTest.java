@@ -113,4 +113,12 @@ public class HttpRequestTest {
         httpRequest = new HttpRequestImpl(bf1,p);
         Assert.assertThat(httpRequest.isVerbAllowed(), is(false));
     }
+
+    @Test
+    public void is_allowed_true_post_method() throws Exception {
+        String s = "POST http://localhost:8080/imagenes/fondo.png?w=300&h=200 HTTP/1.1\r\n";
+        BufferedReader bf1 = createBufferReader(s);
+        httpRequest = new HttpRequestImpl(bf1,p);
+        Assert.assertThat(httpRequest.isVerbAllowed(), is(true));
+    }
 }
