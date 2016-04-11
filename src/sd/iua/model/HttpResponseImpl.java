@@ -1,9 +1,9 @@
 package sd.iua.model;
 
+import sd.iua.utils.Stats;
+
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by francisco on 21/03/2016.
@@ -19,20 +19,24 @@ public class HttpResponseImpl implements HttpResponse {
 
     @Override
     public String getStatus404() {
+        Stats.getInstance().status404();
         return HTTP_1_1_404_NOT_FOUND;
     }
 
     @Override
     public String getStatus405() {
+        Stats.getInstance().status405();
         return HTTP_1_1_405_METHOD_NOT_ALLOWED;
     }
     @Override
     public String getStatus500() {
+        Stats.getInstance().status500();
         return HTTP_1_1_500_INTERNAL_SERVER_ERROR;
     }
 
     @Override
     public String getStatus503() {
+        Stats.getInstance().status503();
         return HTTP_1_1_503_SERVICE_UNAVAILABLE;
     }
 
@@ -56,6 +60,7 @@ public class HttpResponseImpl implements HttpResponse {
 
     @Override
     public String getResponseHeaderOK() {
+        Stats.getInstance().status200();
         return "HTTP/1.1 200 OK\r\n"+headerToString()+"\r\n";
     }
 

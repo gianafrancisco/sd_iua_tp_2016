@@ -1,5 +1,6 @@
 package sd.iua;
 
+import sd.iua.exception.HaltServidorException;
 import sd.iua.exception.ShutdownServidorException;
 import sd.iua.model.HttpResponse;
 import sd.iua.model.HttpResponseImpl;
@@ -47,8 +48,7 @@ public class ServerHttp {
 							if (!t.isAlive()) {
 								clientes.remove(t);
 								break;
-							}
-							;
+							};
 						}
 						if (clientes.size() < maxConn) {
 							System.out.println(cliente.getPort() + " conectado.");
@@ -90,6 +90,14 @@ public class ServerHttp {
 		@Override
 		public void uncaughtException(Thread t, Throwable e) {
 			if(e instanceof ShutdownServidorException){
+				System.out.println(e);
+				System.out.println("Esperando mientras hasta que se atiendan todas la peticiones.");
+				for (Thread c : clientes) {
+					while(c.isAlive()){;}
+				}
+				System.exit(0);
+			}
+			else if(e instanceof HaltServidorException){
 				System.out.println(e);
 				System.exit(0);
 			}
