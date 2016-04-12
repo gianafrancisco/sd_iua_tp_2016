@@ -17,7 +17,7 @@ class AtiendeCliente {
 		AtiendeCliente(EthernetClient *client, Properties prop){
 			this->client = client;
 			this->prop = prop;
-			this->request = new HttpRequestImp(prop);
+			this->request = new HttpRequestImp(client, prop);
 			this->util = new HttpUtilImp();
 			this->response = new HttpResponseImp();
 		};

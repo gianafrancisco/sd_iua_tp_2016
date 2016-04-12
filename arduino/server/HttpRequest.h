@@ -1,4 +1,5 @@
 #include "Properties.h"
+#include <EthernetClient.h>
 
 class HttpRequest {
 public:
