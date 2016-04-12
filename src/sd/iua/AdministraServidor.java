@@ -1,7 +1,10 @@
 package sd.iua;
 
+import sd.iua.exception.HaltServidorException;
 import sd.iua.exception.ShutdownServidorException;
 import sd.iua.model.*;
+import sd.iua.utils.Stats;
+import sd.iua.utils.Uptime;
 
 import java.io.*;
 import java.net.Socket;
@@ -33,11 +36,22 @@ public class AdministraServidor extends Thread {
 		try {
 
 			if(request.isVerbAllowed()){
+				response.addHeader("Server", prop.getProperty("httpserver.name", "HTTP"));
 				switch(request.getPath()){
+					case "/HALT":
+						out.write(response.getResponseHeaderOK().getBytes());
+						throw new HaltServidorException();
 					case "/SHUTDOWN":
-						response.addHeader("Server", prop.getProperty("httpserver.name", "HTTP"));
 						out.write(response.getResponseHeaderOK().getBytes());
 						throw new ShutdownServidorException();
+					case "/UPTIME":
+						out.write(response.getResponseHeaderOK().getBytes());
+						out.write(new Uptime().toString().getBytes());
+						break;
+					case "/REQUESTS":
+						out.write(response.getResponseHeaderOK().getBytes());
+						out.write(Stats.getInstance().toString().getBytes());
+						break;
 					default:
 						out.write(response.getStatus404().getBytes());
 				}
