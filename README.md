@@ -11,4 +11,4 @@ In order to run the server perform the next commands:
 
 Requirements:
 
-Download jdk1.8 from www.oracle.com
+Download jdk1.8 or jdk1.7 from www.oracle.com

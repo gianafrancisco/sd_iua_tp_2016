@@ -20,10 +20,10 @@ public class ServerHttp {
 
 	public static void main(String[] args) throws IOException {
 		prop.load(new FileInputStream(new File(System.getProperty("user.dir"), "httpServer.properties")));
-		int puertoServer = Integer.parseInt(prop.getProperty("httpserver.port", "8080"));
-		int puertoAdmin = Integer.parseInt(prop.getProperty("admin.port", "8081"));
+		final int puertoServer = Integer.parseInt(prop.getProperty("httpserver.port", "8080"));
+		final int puertoAdmin = Integer.parseInt(prop.getProperty("admin.port", "8081"));
 
-		File folder = new File(prop.getProperty("web.site.folder"));
+		final File folder = new File(prop.getProperty("web.site.folder"));
 		if (!folder.exists() || !folder.isDirectory()) {
 			System.err.printf("ERROR: '%s' no es una ruta correcta.%n", folder.getAbsolutePath());
 			System.exit(-1);
