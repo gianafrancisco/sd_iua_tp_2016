@@ -1,8 +1,7 @@
 package sd.iua;
 
-import sd.iua.exception.HaltServidorException;
-import sd.iua.exception.ShutdownServidorException;
 import sd.iua.model.*;
+import sd.iua.utils.ServerControl;
 import sd.iua.utils.Stats;
 import sd.iua.utils.Uptime;
 
@@ -40,10 +39,12 @@ public class AdministraServidor extends Thread {
 				switch(request.getPath()){
 					case "/HALT":
 						out.write(response.getResponseHeaderOK().getBytes());
-						throw new HaltServidorException();
+						ServerControl.getInstance().halt();
+						break;
 					case "/SHUTDOWN":
 						out.write(response.getResponseHeaderOK().getBytes());
-						throw new ShutdownServidorException();
+						ServerControl.getInstance().shutdown();
+						break;
 					case "/UPTIME":
 						out.write(response.getResponseHeaderOK().getBytes());
 						out.write(new Uptime().toString().getBytes());
