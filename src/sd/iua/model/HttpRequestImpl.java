@@ -39,7 +39,7 @@ public class HttpRequestImpl implements HttpRequest {
     @Override
     public String getPath() {
         int begin = ((line.indexOf("//") == -1)?line.indexOf("/"):line.indexOf("/",line.indexOf("//") + 2));
-        int end = (line.indexOf("?", begin) == -1)?line.indexOf(" ", begin):line.indexOf("?", begin);
+        int end = (line.indexOf("?", begin) == -1)?((line.indexOf(" ", begin) == -1)?line.length():line.indexOf(" ", begin)):line.indexOf("?", begin);
         return line.substring(begin, end);
     }
 
@@ -47,8 +47,9 @@ public class HttpRequestImpl implements HttpRequest {
     public String getQuery() {
         int begin = line.indexOf("?");
         if(begin == -1) return "";
-        int end = (line.indexOf(" ", begin) == -1)?begin:line.indexOf(" ", begin);
-        return line.substring(begin + 1, end);
+        begin++;
+        int end = (line.indexOf(" ", begin) == -1)?line.length():line.indexOf(" ", begin);
+        return line.substring(begin, end);
     }
 
     @Override

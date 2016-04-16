@@ -121,4 +121,27 @@ public class HttpRequestTest {
         httpRequest = new HttpRequestImpl(bf1,p);
         Assert.assertThat(httpRequest.isVerbAllowed(), is(true));
     }
+
+    @Test
+    public void test_query_without_http_1_1() throws Exception {
+        String s = "POST http://localhost:8080/imagenes/fondo.png?w=300&h=200\r\n";
+        BufferedReader bf1 = createBufferReader(s);
+        httpRequest = new HttpRequestImpl(bf1,p);
+        Assert.assertThat(httpRequest.isVerbAllowed(), is(true));
+        Assert.assertThat(httpRequest.getVerb(), is("POST"));
+        Assert.assertThat(httpRequest.getPath(), is("/imagenes/fondo.png"));
+        Assert.assertThat(httpRequest.getQuery(), is("w=300&h=200"));
+    }
+
+    @Test
+    public void test_path_without_http_1_1() throws Exception {
+        String s = "POST http://localhost:8080/imagenes/fondo.png\r\n";
+        BufferedReader bf1 = createBufferReader(s);
+        httpRequest = new HttpRequestImpl(bf1,p);
+        Assert.assertThat(httpRequest.isVerbAllowed(), is(true));
+        Assert.assertThat(httpRequest.getVerb(), is("POST"));
+        Assert.assertThat(httpRequest.getPath(), is("/imagenes/fondo.png"));
+    }
+
+
 }
