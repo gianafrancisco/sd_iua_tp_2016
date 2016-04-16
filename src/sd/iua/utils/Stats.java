@@ -40,11 +40,11 @@ public class Stats {
     @Override
     public String toString() {
         return "Stats {" +
-                "Response 200=" + _200 +
-                ", Response 404=" + _404 +
-                ", Response 405=" + _405 +
-                ", Response 500=" + _500 +
-                ", Response 503=" + _503 +
+                " Response 200: " + _200 +
+                ", Response 404: " + _404 +
+                ", Response 405: " + _405 +
+                ", Response 500: " + _500 +
+                ", Response 503: " + _503 +
                 '}';
     }
 }

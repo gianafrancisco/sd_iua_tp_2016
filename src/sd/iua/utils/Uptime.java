@@ -17,7 +17,7 @@ public class Uptime {
     @Override
     public String toString() {
         return "Uptime {" +
-                "uptime=" + uptime +
+                " uptime = " + uptime +" milliseconds"+
                 '}';
     }
 }
