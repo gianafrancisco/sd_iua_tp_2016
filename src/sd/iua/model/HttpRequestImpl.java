@@ -13,11 +13,16 @@ public class HttpRequestImpl implements HttpRequest {
     private StringBuilder sb;
     private Properties prop;
     private String line;
+    private boolean readLine = false;
 
     public HttpRequestImpl(BufferedReader in, Properties prop) {
         this.in = in;
         this.prop = prop;
         sb = new StringBuilder();
+        //this.line = sb.toString().substring(0,sb.toString().indexOf("\r"));
+    }
+
+    private void getRequestLine(BufferedReader in) {
         String line;
         try {
             while( (line = in.readLine()) != null){
@@ -28,16 +33,23 @@ public class HttpRequestImpl implements HttpRequest {
         } catch (IOException e) {
             sb = null;
         }
-        //this.line = sb.toString().substring(0,sb.toString().indexOf("\r"));
     }
 
     @Override
     public String getPlainMessage() {
+        if(!readLine) {
+            getRequestLine(in);
+            readLine = true;
+        }
         return sb.toString();
     }
 
     @Override
     public String getPath() {
+        if(!readLine) {
+            getRequestLine(in);
+            readLine = true;
+        }
         int begin = ((line.indexOf("//") == -1)?line.indexOf("/"):line.indexOf("/",line.indexOf("//") + 2));
         int end = (line.indexOf("?", begin) == -1)?((line.indexOf(" ", begin) == -1)?line.length():line.indexOf(" ", begin)):line.indexOf("?", begin);
         return line.substring(begin, end);
@@ -45,6 +57,10 @@ public class HttpRequestImpl implements HttpRequest {
 
     @Override
     public String getQuery() {
+        if(!readLine) {
+            getRequestLine(in);
+            readLine = true;
+        }
         int begin = line.indexOf("?");
         if(begin == -1) return "";
         begin++;
@@ -54,13 +70,16 @@ public class HttpRequestImpl implements HttpRequest {
 
     @Override
     public String getVerb() {
+        if(!readLine) {
+            getRequestLine(in);
+            readLine = true;
+        }
         String verb = line.substring(0,line.indexOf(" "));
         return verb;
     }
 
     @Override
     public boolean isVerbAllowed() {
-
         switch (getVerb()){
             case "GET":
                 return true;

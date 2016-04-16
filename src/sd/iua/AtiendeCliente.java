@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.Properties;
 
 public class AtiendeCliente extends Thread {
@@ -52,6 +53,8 @@ public class AtiendeCliente extends Thread {
 		} catch (Exception e) {
 			try {
 				out.write(response.getStatus500().getBytes());
+			}catch (SocketException e1){
+				System.out.println("Socker cerrado.");
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
