@@ -32,6 +32,8 @@ public class AdministraServidor extends Thread {
 	public void run() {
 		System.out.printf("Atendiendo [%d]%n", socket.getLocalPort());
 		System.out.println(request.toString());
+		boolean halt = false;
+		boolean shutdown = false;
 		try {
 
 			if(request.isVerbAllowed()){
@@ -39,11 +41,11 @@ public class AdministraServidor extends Thread {
 				switch(request.getPath()){
 					case "/HALT":
 						out.write(response.getResponseHeaderOK().getBytes());
-						ServerControl.getInstance().halt();
+						halt = true;
 						break;
 					case "/SHUTDOWN":
 						out.write(response.getResponseHeaderOK().getBytes());
-						ServerControl.getInstance().shutdown();
+						shutdown = true;
 						break;
 					case "/UPTIME":
 						out.write(response.getResponseHeaderOK().getBytes());
@@ -59,6 +61,24 @@ public class AdministraServidor extends Thread {
 			}else{
 				out.write(response.getStatus405().getBytes());
 			}
+
+			out.flush();
+			out.close();
+			in.close();
+			socket.close();
+
+			if(shutdown) {
+				try {
+					ServerControl.getInstance().shutdown();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+			if(halt){
+				ServerControl.getInstance().halt();
+			}
+
+
 		} catch (IOException e) {
 			try {
 				out.write(response.getStatus500().getBytes());
@@ -66,16 +86,6 @@ public class AdministraServidor extends Thread {
 				e1.printStackTrace();
 			}
 			e.printStackTrace();
-		} finally {
-			try {
-				out.flush();
-				out.close();
-				in.close();
-				socket.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-
 		}
 		System.out.printf("[%d] atendido!", socket.getLocalPort());
 	}

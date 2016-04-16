@@ -8,6 +8,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -17,6 +18,8 @@ public class ServerHttp {
 	private static Properties prop = new Properties();
 	private static List<Socket> clientes;
 	private static int maxConn;
+	private static ServerSocket server;
+	private static ServerSocket serverAdmin;
 
 	public static void main(String[] args) throws IOException {
 		prop.load(new FileInputStream(new File(System.getProperty("user.dir"), "httpServer.properties")));
@@ -29,21 +32,23 @@ public class ServerHttp {
 			System.exit(-1);
 		}
 		maxConn = Integer.parseInt(prop.getProperty("httpserver.maxconn", "10"));
-		clientes = new ArrayList<>();
+		clientes = ServerControl.getInstance().getSockets();
 
 		Runnable admin = new Runnable() {
 			@Override
 			public void run() {
 				try {
-					ServerSocket server = new ServerSocket(puertoAdmin);
+					//serverAdmin = new ServerSocket(puertoAdmin);
+					serverAdmin = ServerControl.getInstance().getAdmin(puertoAdmin);
 					System.out.printf("'%s' escuchando en: %d%n", prop.getProperty("httpserver.name"), puertoAdmin);
 					while (!ServerControl.getInstance().isShutdown()) {
-						Socket cliente = server.accept();
+						Socket cliente = serverAdmin.accept();
 						System.out.println(cliente.getPort() + " conectado.");
 						AdministraServidor administraServidor = new AdministraServidor(cliente, prop, folder);
 						administraServidor.start();
 					}
-					server.close();
+				}catch(SocketException e){
+					System.out.println("Socket server admin cerrado.");
 				}catch (IOException ex){
 					throw new RuntimeException(ex);
 				}
@@ -54,14 +59,15 @@ public class ServerHttp {
 		new Thread(admin).start();
 
 		try {
-			ServerSocket server = new ServerSocket(puertoServer);
+			//server = new ServerSocket(puertoServer);
+			server = ServerControl.getInstance().getServer(puertoServer);
 			System.out.printf("'%s' escuchando en: %d%n", prop.getProperty("httpserver.name"), puertoServer);
 			System.out.printf("Usando '%s' como raíz.%n", folder.getAbsolutePath());
 
 			while (!ServerControl.getInstance().isShutdown()) {
 				Socket cliente = server.accept();
 				for (Socket t : clientes) {
-					if ( t!= null && t.isClosed()) {
+					if (t != null && t.isClosed()) {
 						clientes.remove(t);
 						break;
 					};
@@ -77,28 +83,8 @@ public class ServerHttp {
 					cliente.close();
 				}
 			}
-			if(ServerControl.getInstance().isHalt()){
-				server.close();
-				for (Socket t : clientes) {
-					if ( t!=null && !t.isClosed()) {
-						t.close();
-					};
-				}
-			}else{
-				server.close();
-				for (Socket t : clientes) {
-					if ( t!=null && !t.isClosed()) {
-						try {
-							/* Esperamos a que las conexiones en curso hayan terminado */
-							while(!t.isClosed()){
-								Thread.sleep(1000);
-							}
-						} catch (InterruptedException e) {
-							e.printStackTrace();
-						}
-					};
-				}
-			}
+		}catch (SocketException ex){
+			System.out.println("Socket server cerrado.");
 		}catch (IOException ex){
 			throw new RuntimeException(ex);
 		}
