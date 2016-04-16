@@ -32,7 +32,7 @@ public class ServerControl {
     public synchronized void shutdown() throws IOException, InterruptedException {
         shutdown = true;
         server.close();
-        admin.close();
+        //admin.close();
         for (Socket t : sockets) {
             if ( t!=null && !t.isClosed()) {
                 /* Esperamos a que las conexiones en curso hayan terminado */
