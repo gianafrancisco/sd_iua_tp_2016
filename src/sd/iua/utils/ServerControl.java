@@ -8,6 +8,8 @@ import java.util.List;
 
 /**
  * Created by francisco on 16/04/16.
+ * Sigleton utilizado para controlar el servidor desde cualquier clase sin necesidad de tener que pasar
+ * una instancia como parametro constructor.
  */
 public class ServerControl {
     private static ServerControl ourInstance = new ServerControl();
@@ -41,6 +43,8 @@ public class ServerControl {
                 }
             };
         }
+        /* Fuerza el cierre del servidor */
+        System.exit(0);
 
     }
 
@@ -51,11 +55,13 @@ public class ServerControl {
         server.close();
         admin.close();
         for (Socket t : sockets) {
+            /* Espera a que todos los socket esten cerrados */
             if ( t!=null && !t.isClosed()) {
                 t.close();
             };
         }
-
+        /* Fuerza el cierre del servidor */
+        System.exit(0);
     }
 
     public boolean isHalt() {return halt;}
