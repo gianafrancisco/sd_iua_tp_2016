@@ -55,7 +55,7 @@ public class ServerHttp {
 
 			}
 		};
-		/* Creamos el hilo que va administrar el servidor */
+		/* Creamos y lanzamos el hilo que va administrar el servidor */
 		new Thread(admin).start();
 
 		try {
@@ -66,16 +66,21 @@ public class ServerHttp {
 
 			while (!ServerControl.getInstance().isShutdown()) {
 				Socket cliente = server.accept();
+				/* Verifica cuales son las conexiones cerradas para eliminarla del pool de conexiones */
 				for (Socket t : clientes) {
 					if (t != null && t.isClosed()) {
 						clientes.remove(t);
 						break;
 					};
 				}
+				/* Verifica si la cantidad la maxima cantidad de conexiones ha sido alcanzada */
 				if (clientes.size() < maxConn) {
 					System.out.println(cliente.getPort() + " conectado.");
+					/* Crea el worker que procesa la paticion del cliente */
 					AtiendeCliente atiendeCliente = new AtiendeCliente(cliente, prop, folder);
+					/* Agrega al pool de conexiones */
 					clientes.add(cliente);
+					/* Lanza el worker */
 					atiendeCliente.start();
 				} else {
 					System.err.println("ERROR: se ha llegado a la capacidad maxima de clientes conectados.");

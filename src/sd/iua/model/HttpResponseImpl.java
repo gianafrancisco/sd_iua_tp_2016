@@ -19,6 +19,7 @@ public class HttpResponseImpl implements HttpResponse {
 
     @Override
     public String getStatus404() {
+        /* Usamos un sigleton para contabilizar los mensajes de respuesta que el server fue resolviendo */
         Stats.getInstance().status404();
         return HTTP_1_1_404_NOT_FOUND;
     }

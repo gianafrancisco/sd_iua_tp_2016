@@ -30,6 +30,7 @@ public class HttpUtilImpl implements HttpUtil {
     @Override
     public boolean fileExists(String virtualPath) {
         File f = new File(folder, virtualPath);
+        /* Preguntamos si el archivo o directorio existe */
         return f.exists();
     }
 }

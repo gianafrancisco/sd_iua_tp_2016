@@ -5,6 +5,7 @@ import java.lang.management.RuntimeMXBean;
 
 /**
  * Created by francisco on 09/04/16.
+ * Utilitario para calcular el uptime del proceso.
  */
 public class Uptime {
     private long uptime;

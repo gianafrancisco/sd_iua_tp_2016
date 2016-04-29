@@ -2,6 +2,8 @@ package sd.iua.utils;
 
 /**
  * Created by francisco on 09/04/16.
+ * Sigleton utilizado para contabilizar las respuestas del servidor desde cualquier clase sin necesidad de tener que pasar
+ * una instancia como parametro constructor.
  */
 public class Stats {
     private static Stats ourInstance = new Stats();

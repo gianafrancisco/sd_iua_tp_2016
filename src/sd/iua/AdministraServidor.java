@@ -35,9 +35,10 @@ public class AdministraServidor extends Thread {
 		boolean halt = false;
 		boolean shutdown = false;
 		try {
-
+			/* Verificamos los verbos GET o POST */
 			if(request.isVerbAllowed()){
 				response.addHeader("Server", prop.getProperty("httpserver.name", "HTTP"));
+				/* Atiende solo a los comandos detallados en el switch() */
 				switch(request.getPath()){
 					case "/HALT":
 						out.write(response.getResponseHeaderOK().getBytes());
@@ -66,7 +67,7 @@ public class AdministraServidor extends Thread {
 			out.close();
 			in.close();
 			socket.close();
-
+			/* Si el comando fue shutdown ejecuto shutdown() en el sigleton control */
 			if(shutdown) {
 				try {
 					ServerControl.getInstance().shutdown();
@@ -74,6 +75,7 @@ public class AdministraServidor extends Thread {
 					e.printStackTrace();
 				}
 			}
+			/* Si el comando fue halt ejecuto halt() en el sigleton control */
 			if(halt){
 				ServerControl.getInstance().halt();
 			}

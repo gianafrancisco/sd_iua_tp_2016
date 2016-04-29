@@ -13,6 +13,7 @@ public class HttpRequestImpl implements HttpRequest {
     private StringBuilder sb;
     private Properties prop;
     private String line;
+    /* Utilizamos el flag para asegurarnos de que vamos a leer la primera linea cuando alguno de los metodos de invocados */
     private boolean readLine = false;
 
     public HttpRequestImpl(BufferedReader in, Properties prop) {
@@ -37,6 +38,7 @@ public class HttpRequestImpl implements HttpRequest {
 
     @Override
     public String getPlainMessage() {
+        /* Verificamos si ya hemos leido la primer linea */
         if(!readLine) {
             getRequestLine(in);
             readLine = true;
@@ -80,6 +82,9 @@ public class HttpRequestImpl implements HttpRequest {
 
     @Override
     public boolean isVerbAllowed() {
+        /*
+        Comparamos solamente los metodos espcificados en el practico.
+         */
         switch (getVerb()){
             case "GET":
                 return true;
