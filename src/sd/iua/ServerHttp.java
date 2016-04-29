@@ -79,7 +79,7 @@ public class ServerHttp {
 					atiendeCliente.start();
 				} else {
 					System.err.println("ERROR: se ha llegado a la capacidad maxima de clientes conectados.");
-					cliente.getOutputStream().write(new HttpResponseImpl().getStatus500().getBytes());
+					cliente.getOutputStream().write(new HttpResponseImpl().getStatus503().getBytes());
 					cliente.close();
 				}
 			}
